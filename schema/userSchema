@@ -1,0 +1,19 @@
+const mongoose = require("mongoose");
+const autoincrement = require("mongoose-auto-increment")
+
+
+const userSchema = mongoose.Schema({
+    name: String,
+    email: String,
+    password: String,
+    contact:{
+        type:Array,
+        default:[]
+    }
+})
+
+autoincrement.initialize(mongoose.connection)
+userSchema.plugin(autoincrement.plugin,"user")
+
+const user = mongoose.model("user", userSchema)
+module.exports = user
