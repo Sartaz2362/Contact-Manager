@@ -51,6 +51,8 @@ module.exports = getContactById
 
 // Put request for Edit contact
 const editContact = async(req,resp) =>{
+
+
     const {_id,name,phone} = req.body
     try{
     await Contact.findByIdAndUpdate(req.body.id,{name,phone})
@@ -63,8 +65,7 @@ const editContact = async(req,resp) =>{
         return item
     })
     await User.findByIdAndUpdate(req.params.myId,{contact})
-    // console.log("after : ",le.contact);
-     resp.status(201).json({success:true})
+     resp.status(201).json({success:true,message:"Contact Edit success"})
     }catch(error){
         resp.status(409).json({message:error.message})
     }
@@ -78,7 +79,7 @@ const deleteContact = async(req,resp)=>{
      const me = await User.findById(req.params.myId)
      me.contact = me.contact.filter((item)=> item._id!=req.params.id)
      await me.save();
-     resp.status(201).json({success:true,newContact:me.contact})
+     resp.status(201).json({success:true,newContact:me.contact,message:"contact Delete success"})
     }catch(error){
         resp.status(409).json({message:error.message})
     }
