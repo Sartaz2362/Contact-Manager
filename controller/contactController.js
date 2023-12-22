@@ -5,12 +5,13 @@ const User = require("../schema/userSchema");
 // Post request for add data in DB
 const addContact = async(req,resp) =>{
     try{
-    const {name,phone,id} = req.body;
+    var {name,phone,id} = req.body;
+    name = name.trim()
  
     const user = await User.findById(id)
     const contact = await Contact.findOne({name})
     if(contact){
-        resp.send({success:false,message:"This name is already saved"})
+        resp.status(201).json({success:false,message:"This name is already saved"})
     }else{
         const newContact = new Contact({name,phone})
         const saved = await newContact.save();
@@ -51,10 +52,13 @@ module.exports = getContactById
 
 // Put request for Edit contact
 const editContact = async(req,resp) =>{
-
-
-    const {_id,name,phone} = req.body
+    var {_id,name,phone} = req.body
+    name = name.trim()
     try{
+    const existname = await Contact.findOne({name})
+    if(existname){
+        resp.status(201).json({success:false,message:"This name is already saved"})
+    } else {
     await Contact.findByIdAndUpdate(req.body.id,{name,phone})
     const me = await User.findOne({_id:req.params.myId})
     const contact = me.contact.map((item)=>{
@@ -66,6 +70,7 @@ const editContact = async(req,resp) =>{
     })
     await User.findByIdAndUpdate(req.params.myId,{contact})
      resp.status(201).json({success:true,message:"Contact Edit success"})
+    }
     }catch(error){
         resp.status(409).json({message:error.message})
     }
