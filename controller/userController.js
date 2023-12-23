@@ -1,6 +1,9 @@
 // const User = require("../schema/userSchema.js")
 const User = require("../schema/userSchema");
 const jwt = require("jsonwebtoken")
+const dotenv = require("dotenv")
+
+dotenv.config()
 
 const Register = async(req,resp)=>{
     try{
@@ -12,7 +15,8 @@ const Register = async(req,resp)=>{
     }else{
     const newUSer = new User({name,email,password});
     const me = await newUSer.save();
-    var token = await jwt.sign({_id:me._id},"sandeepkhariwal",{expiresIn:"7d"})
+    console.log();
+    var token = await jwt.sign({_id:me._id},process.env.SECRET_KEY,{expiresIn:"7d"})
     delete me.password;
     resp.status(201).json({message:"User Registered Successfully",newUser:me,token});
     }
@@ -29,7 +33,7 @@ const Login = async(req,resp)=>{
     const user = await User.findOne({email})
     if(user){
         if(password === user.password){
-            var token = await jwt.sign({_id:user._id},"sandeepkhariwal",{expiresIn:"7d"})
+            var token = await jwt.sign({_id:user._id},process.env.SECRET_KEY,{expiresIn:"7d"})
             resp.send({message:"Login Successfully" , newUser:user,token})
         }
         else{

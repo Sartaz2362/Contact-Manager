@@ -1,11 +1,13 @@
 const mongoose = require("mongoose")
+const dotenv = require("dotenv")
 
-const URL = "mongodb+srv://contact:7sx7LfS1Zgb2anSP@cluster0.gfuzmle.mongodb.net/contact-manager?retryWrites=true&w=majority"
+dotenv.config()
 
+const URL  = process.env.DATABASE
 const connection = async() =>{
    try{
       await mongoose.connect(URL,{useUnifiedTopology:true ,useNewUrlParser:true})
-      console.log(`databse connected on port ${URL}`)
+      console.log(`databse connected `)
    }catch(error){
       console.log("Error while Creating DataBase",error)
    }

@@ -12,3 +12,4 @@ contactSchema.plugin(autoIncrement.plugin,"contact")
 const contact = mongoose.model("contact",contactSchema)
 module.exports = contact
 
+
